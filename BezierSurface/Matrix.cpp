@@ -114,6 +114,8 @@ void Matrix::destructMultiply(Vector* arg)
 	for (GLint i = 0; i < v[0].coords.size(); ++i) {
 		arg->coords[i] = tempCol[i];
 	}
+
+	delete[] tempCol;
 }
 
 Matrix Matrix::inverse(Matrix & arg)

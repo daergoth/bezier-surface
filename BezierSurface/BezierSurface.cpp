@@ -3,7 +3,7 @@
 const GLfloat BezierSurface::PI = 3.1415926539;
 GLint BezierSurface::clicked = -1;
 
-BasePlain BezierSurface::clickPlain = BasePlain(Vector(100, 100), 640, 360);
+BasePlain BezierSurface::clickPlain = BasePlain(Vector(100, 100), 700, 700);
 BSurface BezierSurface::bezier = BSurface(BezierSurface::ctrlpointsReal);
 
 Matrix BezierSurface::cameraMatrix = Matrix({
