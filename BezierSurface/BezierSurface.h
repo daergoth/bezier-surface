@@ -22,4 +22,5 @@ public:
 
 	void static init();
 	void static renderPoints();
+	void static renderNet();
 };

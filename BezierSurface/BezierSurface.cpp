@@ -65,6 +65,46 @@ void BezierSurface::renderPoints()
 	glEnd();
 }
 
+void BezierSurface::renderNet()
+{
+	if (ctrlpointsReal.size() < 16) {
+		return;
+	}
+
+	glColor3f(0, 0, 0);
+
+	glBegin(GL_LINE_STRIP);
+	GLint u = 1;
+	for (GLint i = 0; i < ctrlpointsReal.size(); i+=u) {
+		Vector p = cameraMatrix * (*ctrlpointsReal[i]);
+
+		glVertex2f(p[0], p[1]);
+
+		if (u > 0 && i % 4 == 3) {
+			u = -1;
+			i += 5;
+		} else if (u < 0 && i % 4 == 0) {
+			u = 1;
+			i += 3;
+		}
+
+	}
+	
+	glEnd();
+
+	glBegin(GL_LINES);
+	for (GLint i = 0; i < ctrlpointsReal.size(); ++i) {
+		if (i + 4 < 16 ) {
+			Vector p = cameraMatrix * (*ctrlpointsReal[i]);
+			Vector o = cameraMatrix * (*ctrlpointsReal[i+4]);
+
+			glVertex2f(p[0], p[1]);
+			glVertex2f(o[0], o[1]);
+		}
+	}
+	glEnd();
+}
+
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	std::cout << "cl: " << BezierSurface::clicked << std::endl;
@@ -107,6 +147,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 			if (BezierSurface::ctrlpointsPlain.size() == 16) {
 				//BezierSurface::bezier = BSurface();
+
 				BezierSurface::bezier.setCtrls(BezierSurface::ctrlpointsReal);
 				BezierSurface::bezier.enable();
 			}
@@ -162,9 +203,10 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		/* -- Render -- */
-		BezierSurface::bezier.draw(BezierSurface::cameraMatrix);
-		BezierSurface::renderPoints();
 		BezierSurface::clickPlain.draw( BezierSurface::cameraMatrix);
+		BezierSurface::bezier.draw(BezierSurface::cameraMatrix);
+		BezierSurface::renderNet();
+		BezierSurface::renderPoints();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
